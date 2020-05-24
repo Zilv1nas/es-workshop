@@ -10,6 +10,7 @@ import io.inventi.esworkshop.service.impl.UuidGenerator
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
+import java.time.Clock
 
 
 @Configuration
@@ -26,4 +27,7 @@ class AppConfig {
 
     @Bean
     fun idGenerator() = UuidGenerator()
+
+    @Bean
+    fun clock() = Clock.systemDefaultZone()
 }

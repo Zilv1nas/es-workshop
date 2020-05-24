@@ -3,6 +3,7 @@ package io.inventi.esworkshop.domain.repository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.msemys.esjc.EventData
 import com.github.msemys.esjc.EventStore
+import com.github.msemys.esjc.ExpectedVersion
 import com.github.msemys.esjc.ResolvedEvent
 import com.github.msemys.esjc.operation.StreamNotFoundException
 import io.inventi.esworkshop.domain.aggregate.EventSourcedAggregate
@@ -39,6 +40,7 @@ abstract class EventSourcedAggregateRepository<AGGREGATE, EVENT>(
 
     override fun save(aggregate: AGGREGATE) {
         val stream = aggregate.id.toStreamName(aggregate::class)
+        val expectedVersion = aggregate.version ?: ExpectedVersion.NO_STREAM
         val eventsToAppend = aggregate.changes.map {
             EventData.newBuilder()
                     .jsonData(objectMapper.writeValueAsBytes(it))
@@ -46,7 +48,7 @@ abstract class EventSourcedAggregateRepository<AGGREGATE, EVENT>(
                     .build()
         }
 
-        eventStore.appendToStream(stream, aggregate.version, eventsToAppend).join()
+        eventStore.appendToStream(stream, expectedVersion, eventsToAppend).join()
     }
 
     @Suppress("UNCHECKED_CAST")

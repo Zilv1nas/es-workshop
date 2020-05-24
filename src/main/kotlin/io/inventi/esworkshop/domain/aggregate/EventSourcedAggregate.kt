@@ -8,11 +8,14 @@ private const val EVENT_HANDLER_FUNCTION = "apply"
 
 abstract class EventSourcedAggregate<EVENT : DomainEvent> : Aggregate {
     val changes = mutableListOf<EVENT>()
-    internal var version: Long = 0
+    internal var version: Long? = null
 
     fun apply(event: EVENT) {
         val eventType = event::class.java
-        findMatchingMethods(eventType).forEach { it(event) }
+        findMatchingMethods(eventType).forEach { it ->
+            it.isAccessible = true
+            it(this, event)
+        }
     }
 
     fun causes(event: EVENT) {
