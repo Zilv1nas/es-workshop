@@ -13,12 +13,26 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://jitpack.io")
+        credentials {
+            username = "jitpackToken"
+        }
+    }
 }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.flywaydb:flyway-core")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.0")
+    implementation("com.github.msemys:esjc:2.2.0")
+    implementation("org.postgresql:postgresql:42.2.12")
+    implementation("com.github.inventi:eventstore-tools:v3.0.1")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }

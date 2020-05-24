@@ -1,1 +1,32 @@
+spring:
+  application:
+    name: es-workshop
+  datasource:
+    url: jdbc:postgresql://${sql_host}:${sql_port}/${sql_database}?currentSchema=${sql_schema}
+    username: ${sql_username}
+    password: ${sql_password}
+  flyway:
+    schemas: ${sql_schema}
+    placeholderReplacement: true
+    placeholders:
+      idempotency: es_workshop_idempotent_classifier
 
+spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+---
+spring:
+  profiles: dev
+
+eventstore:
+  host: localhost
+  port: 1113
+  username: admin
+  password: changeit
+  endpoint: http://localhost:2113
+
+sql_schema: es_workshop
+sql_host: localhost
+sql_port: 5432
+sql_database: db
+sql_username: root
+sql_password: root

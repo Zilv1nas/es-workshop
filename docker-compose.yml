@@ -1,0 +1,46 @@
+version: "3.4"
+
+x-eventstore-config: &eventstore-config
+  EVENTSTORE_ENDPOINT: http://eventstore:2113
+  EVENTSTORE_HOST: eventstore
+  EVENTSTORE_PORT: 1113
+  EVENTSTORE_USERNAME: admin
+  EVENTSTORE_PASSWORD: changeit
+
+x-postgres-config: &postgres-config
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/db?currentSchema=$${spring.application.name}
+  SPRING_DATASOURCE_USERNAME: root
+  SPRING_DATASOURCE_PASSWORD: root
+
+services:
+  redis:
+    image: redis:5.0.8-alpine
+    ports:
+    - "127.0.0.1:6379:6379"
+
+  eventstore:
+    image: eventstore/eventstore:release-5.0.8
+    ports:
+    - "1112:1112"
+    - "1113:1113"
+    - "2113:2113"
+    - "2112:2112"
+    environment:
+    - EVENTSTORE_RUN_PROJECTIONS=all
+    - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+    - EVENTSTORE_STATS_PERIOD_SEC=3000
+
+  postgres:
+    restart: always
+    image: postgres:13
+    environment:
+    - POSTGRES_USER=root
+    - POSTGRES_PASSWORD=root
+    - POSTGRES_DB=db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+    - 5432:5432
