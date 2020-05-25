@@ -13,11 +13,6 @@ x-postgres-config: &postgres-config
   SPRING_DATASOURCE_PASSWORD: root
 
 services:
-  redis:
-    image: redis:5.0.8-alpine
-    ports:
-    - "127.0.0.1:6379:6379"
-
   eventstore:
     image: eventstore/eventstore:release-5.0.8
     ports:

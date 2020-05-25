@@ -3,7 +3,7 @@ package io.inventi.esworkshop.web.model.request
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import io.inventi.esworkshop.web.model.DEPOSIT
-import io.inventi.esworkshop.web.model.TRANSFER
+import io.inventi.esworkshop.web.model.PAYMENT
 import java.math.BigDecimal
 
 @JsonTypeInfo(
@@ -13,19 +13,15 @@ import java.math.BigDecimal
 )
 @JsonSubTypes(
         JsonSubTypes.Type(value = Deposit::class, name = DEPOSIT),
-        JsonSubTypes.Type(value = Transfer::class, name = TRANSFER)
+        JsonSubTypes.Type(value = Payment::class, name = PAYMENT)
 )
-sealed class NewAccountTransaction {
-    abstract val accountId: String
-}
+sealed class NewAccountTransaction
 
 data class Deposit(
-        override val accountId: String,
         val amount: BigDecimal
 ) : NewAccountTransaction()
 
-data class Transfer(
-        override val accountId: String,
+data class Payment(
         val amount: BigDecimal,
         val payeeAccountId: String
 ) : NewAccountTransaction()

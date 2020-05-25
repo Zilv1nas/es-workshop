@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    val jdbiVersion = "3.10.1"
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -33,6 +34,9 @@ dependencies {
     implementation("com.github.msemys:esjc:2.2.0")
     implementation("org.postgresql:postgresql:42.2.12")
     implementation("com.github.inventi:eventstore-tools:v3.0.1")
+    implementation("org.jdbi:jdbi3-core:$jdbiVersion")
+    implementation("org.jdbi:jdbi3-kotlin:$jdbiVersion")
+    implementation("org.jdbi:jdbi3-kotlin-sqlobject:$jdbiVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
