@@ -7,6 +7,7 @@ import io.inventi.esworkshop.domain.event.bankaccount.BankAccountCreated
 import io.inventi.esworkshop.domain.event.bankaccount.BankAccountEvent
 import io.inventi.esworkshop.domain.event.bankaccount.IncomingPaymentReceived
 import io.inventi.esworkshop.domain.event.bankaccount.IncomingPaymentRejected
+import io.inventi.esworkshop.domain.event.bankaccount.IncomingPaymentRejected.RejectionReason.ACCOUNT_LIMIT_EXCEEDED
 import io.inventi.esworkshop.domain.event.bankaccount.MoneyDeposited
 import io.inventi.esworkshop.domain.event.bankaccount.OutgoingPaymentCompleted
 import io.inventi.esworkshop.domain.event.bankaccount.OutgoingPaymentInitiated
@@ -33,6 +34,8 @@ class BankAccount(
     private fun now() = Instant.now(clock)
 
     fun register(name: String, currency: Currency) {
+        if (this::name.isInitialized) throw IllegalStateException("Bank account $id is already registered")
+
         causes(BankAccountCreated(now(), id, name, currency))
     }
 
@@ -52,7 +55,7 @@ class BankAccount(
         if (transactionsById.containsKey(transactionId)) return
 
         if (balance + amount > accountLimit) {
-            causes(IncomingPaymentRejected(now(), id, transactionId, amount, payerAccountId))
+            causes(IncomingPaymentRejected(now(), id, transactionId, amount, payerAccountId, ACCOUNT_LIMIT_EXCEEDED))
         } else {
             causes(IncomingPaymentReceived(now(), id, transactionId, amount, payerAccountId))
         }

@@ -8,5 +8,8 @@ data class IncomingPaymentRejected(
         override val accountId: String,
         val transactionId: String,
         val amount: BigDecimal,
-        val payerAccountId: String
-) : BankAccountEvent
+        val payerAccountId: String,
+        val reason: RejectionReason
+) : BankAccountEvent {
+    enum class RejectionReason { ACCOUNT_LIMIT_EXCEEDED }
+}
