@@ -1,5 +1,6 @@
 package io.inventi.esworkshop.projection.model
 
+import io.inventi.esworkshop.domain.aggregate.bankaccount.Currency
 import org.hibernate.annotations.Formula
 import java.math.BigDecimal
 import java.math.BigDecimal.ZERO
@@ -7,8 +8,6 @@ import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.Id
-
-enum class Currency { EUR }
 
 @Entity
 data class BankAccountProjection(

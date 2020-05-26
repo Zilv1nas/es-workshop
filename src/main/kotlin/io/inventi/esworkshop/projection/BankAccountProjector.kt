@@ -11,7 +11,6 @@ import io.inventi.esworkshop.projection.model.AccountTransactionProjection.Statu
 import io.inventi.esworkshop.projection.model.AccountTransactionProjection.Status.REJECTED
 import io.inventi.esworkshop.projection.model.AccountTransactionProjectionId
 import io.inventi.esworkshop.projection.model.BankAccountProjection
-import io.inventi.esworkshop.projection.model.Currency
 import io.inventi.esworkshop.projection.model.DepositProjection
 import io.inventi.esworkshop.projection.model.IncomingPaymentProjection
 import io.inventi.esworkshop.projection.model.OutgoingPaymentProjection
@@ -41,7 +40,7 @@ class BankAccountProjector(
         bankAccountProjectionRepository.save(BankAccountProjection(
                 event.accountId,
                 event.name,
-                Currency.valueOf(event.currency.name)
+                event.currency
         ))
     }
 

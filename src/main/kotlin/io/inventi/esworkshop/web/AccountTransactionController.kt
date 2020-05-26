@@ -1,11 +1,14 @@
 package io.inventi.esworkshop.web
 
 import io.inventi.esworkshop.domain.repository.BankAccountRepository
+import io.inventi.esworkshop.projection.model.AccountTransactionProjection
+import io.inventi.esworkshop.projection.model.AccountTransactionProjectionId
+import io.inventi.esworkshop.projection.repository.AccountTransactionProjectionRepository
 import io.inventi.esworkshop.service.IdGenerator
-import io.inventi.esworkshop.web.model.request.Deposit
-import io.inventi.esworkshop.web.model.request.NewAccountTransaction
-import io.inventi.esworkshop.web.model.request.OutgoingPayment
-import io.inventi.esworkshop.web.model.response.AccountTransaction
+import io.inventi.esworkshop.web.model.Deposit
+import io.inventi.esworkshop.web.model.NewAccountTransaction
+import io.inventi.esworkshop.web.model.OutgoingPayment
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/v1/accounts/{accountId}/transactions")
 class AccountTransactionController(
+        private val transactionProjectionRepository: AccountTransactionProjectionRepository,
         private val bankAccountRepository: BankAccountRepository,
         private val idGenerator: IdGenerator
 ) {
@@ -46,12 +50,12 @@ class AccountTransactionController(
     fun get(
             @PathVariable("accountId") accountId: String,
             @PathVariable("id") id: String
-    ): List<AccountTransaction> {
-        TODO("Not yet implemented")
+    ): ResponseEntity<AccountTransactionProjection> {
+        return transactionProjectionRepository.findByIdOrNull(AccountTransactionProjectionId(id, accountId))
+                ?.let { ResponseEntity.ok(it) }
+                ?: ResponseEntity.notFound().build()
     }
 
     @GetMapping
-    fun getAll(@PathVariable("accountId") accountId: String): List<AccountTransaction> {
-        TODO("Not yet implemented")
-    }
+    fun getAll(@PathVariable("accountId") accountId: String) = transactionProjectionRepository.findAllByAccountId(accountId)
 }
