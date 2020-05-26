@@ -4,7 +4,7 @@ import io.inventi.esworkshop.domain.repository.BankAccountRepository
 import io.inventi.esworkshop.service.IdGenerator
 import io.inventi.esworkshop.web.model.request.Deposit
 import io.inventi.esworkshop.web.model.request.NewAccountTransaction
-import io.inventi.esworkshop.web.model.request.Payment
+import io.inventi.esworkshop.web.model.request.OutgoingPayment
 import io.inventi.esworkshop.web.model.response.AccountTransaction
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -34,7 +34,7 @@ class AccountTransactionController(
                 bankAccountRepository.save(bankAccount)
                 ResponseEntity.ok(transactionId)
             }
-            is Payment -> {
+            is OutgoingPayment -> {
                 bankAccount.initiateOutgoingPayment(transactionId, transaction.amount, transaction.payeeAccountId)
                 bankAccountRepository.save(bankAccount)
                 ResponseEntity.ok(transactionId)
