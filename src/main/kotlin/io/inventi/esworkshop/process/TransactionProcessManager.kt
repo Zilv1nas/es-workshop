@@ -6,6 +6,8 @@ import io.inventi.esworkshop.domain.event.bankaccount.OutgoingPaymentInitiated
 import io.inventi.esworkshop.domain.repository.BankAccountRepository
 import io.inventi.eventstore.eventhandler.IdempotentEventHandler
 import io.inventi.eventstore.eventhandler.annotation.EventHandler
+import io.inventi.eventstore.util.LoggerDelegate
+import org.slf4j.Logger
 import org.springframework.stereotype.Component
 
 @Component
@@ -15,8 +17,14 @@ class TransactionProcessManager(
         "\$ce-BankAccount",
         "transaction-process-manager"
 ) {
+    companion object {
+        private val logger: Logger by LoggerDelegate()
+    }
+
     @EventHandler
     fun onPaymentInitiated(event: OutgoingPaymentInitiated) {
+        logger.info("Handling event $event")
+
         val payeeAccount = findBankAccount(event.payeeAccountId)
         payeeAccount.receiveIncomingPayment(event.transactionId, event.amount, event.accountId)
         bankAccountRepository.save(payeeAccount)
@@ -24,6 +32,8 @@ class TransactionProcessManager(
 
     @EventHandler
     fun onIncomingPaymentRejected(event: IncomingPaymentRejected) {
+        logger.info("Handling event $event")
+
         val payerAccount = findBankAccount(event.payerAccountId)
         payerAccount.rejectOutgoingPayment(event.transactionId)
         bankAccountRepository.save(payerAccount)
@@ -31,6 +41,8 @@ class TransactionProcessManager(
 
     @EventHandler
     fun onIncomingPaymentReceived(event: IncomingPaymentReceived) {
+        logger.info("Handling event $event")
+
         val payerAccount = findBankAccount(event.payerAccountId)
         payerAccount.completeOutgoingPayment(event.transactionId)
         bankAccountRepository.save(payerAccount)
