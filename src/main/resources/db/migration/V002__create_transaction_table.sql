@@ -4,7 +4,7 @@ create table account_transaction_projection
     account_id                        text                     not null,
     type                              text                     not null,
     status                            text                     not null,
-    amount_delta                      decimal(20, 4)           not null,
+    amount_delta                      decimal(20, 2)           not null,
     payee_account_id                  text,
     payer_account_id                  text,
 
