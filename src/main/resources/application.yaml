@@ -1,3 +1,19 @@
+sql_schema: es_workshop
+sql_host: localhost
+sql_port: 5432
+sql_database: db
+sql_username: root
+sql_password: root
+
+eventstore:
+  host: localhost
+  port: 1113
+  username: admin
+  password: changeit
+  endpoint: http://localhost:2113
+  subscriptions:
+    enabled: true
+
 spring:
   application:
     name: es-workshop
@@ -13,24 +29,3 @@ spring:
 
 spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
-eventstore:
-  subscriptions:
-    enabled: true
-
----
-spring:
-  profiles: dev
-
-eventstore:
-  host: localhost
-  port: 1113
-  username: admin
-  password: changeit
-  endpoint: http://localhost:2113
-
-sql_schema: es_workshop
-sql_host: localhost
-sql_port: 5432
-sql_database: db
-sql_username: root
-sql_password: root
